@@ -1,5 +1,7 @@
 package softBall.model;
 
+import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,5 +17,9 @@ public class Pitching  extends CSVDataClass {
     @Override
     protected boolean containsParameter(String name) {
         return true;
+    }
+    
+    public static List<Pitching> fromCsv(Path fileName) {
+        return readFromCSV(fileName, Pitching::new);
     }
 }

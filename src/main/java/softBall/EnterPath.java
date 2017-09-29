@@ -1,10 +1,14 @@
 package softBall;
 
+import java.nio.file.Files;
+import java.util.Map;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import softBall.model.Batting;
+import softBall.model.CSVLoader;
 
 /**
  * @author Lucija Raženj
@@ -36,27 +40,31 @@ public class EnterPath extends JFrame {
                     GetData getData;
 
                     try{
-                        getData = new GetData(path);
-                        SwingBatting swingBatting = new SwingBatting(getData.battingMap());
+                        DataLoader loader = new DataLoader();
+                        Files.walkFileTree(path, loader);
+                        
+                        
+                        SwingBatting swingBatting = new SwingBatting(loader.getBatterHeaders(), loader.getBattingMap());
                         swingBatting.setResizable(true);
-                        swingBatting.setVisible(true);
-                        swingBatting.setLocation(10, 50);
                         swingBatting.pack();
+                        swingBatting.setLocation(10, 50);
+                        swingBatting.setVisible(true);
 
-                        SwingPitching swingPitching = new SwingPitching(getData.pitchingMap());
+                        SwingPitching swingPitching = new SwingPitching(loader.getPitchingHeaders(), loader.getPitchingMap());
                         swingPitching.setResizable(true);
-                        swingPitching.setVisible(true);
                         swingPitching.setLocation(470, 50);
                         swingPitching.pack();
+                        swingPitching.setVisible(true);
 
-                        SwingFielding swingFielding = new SwingFielding(getData.fieldingMap());
+                        SwingFielding swingFielding = new SwingFielding(loader.getFieldingHeaders(), loader.getFieldingMap());
                         swingFielding.setResizable(true);
-                        swingFielding.setVisible(true);
                         swingFielding.setLocation(925,50);
                         swingFielding.pack();
+                        swingFielding.setVisible(true);
 
                     }catch (Exception ex){
                         textField.setText("Nije uspio pronaci upisani direktorij, pokusaj ponovo.");
+                        ex.printStackTrace();
                     }
 
 

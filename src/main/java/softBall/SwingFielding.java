@@ -19,12 +19,13 @@ public class SwingFielding extends JFrame {
 
 
     private JTable table;
+    private String[] names;
     private Map<String, Fielding> fielding;
 
 
-    public SwingFielding(Map<String, Fielding> fielding) {
+    public SwingFielding(String[] names, Map<String, Fielding> fielding) {
         this.fielding = fielding;
-
+        this.names = names;
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         initGui();
     }
@@ -33,35 +34,9 @@ public class SwingFielding extends JFrame {
     private void initGui() {
         JPanel mainPanel = new JPanel(new BorderLayout());
         getContentPane().add(mainPanel);
-
-
         table = createBattingTable();
         JScrollPane scrollPane = new JScrollPane(table);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
-
-
-        JButton btn = new JButton();
-        mainPanel.add(btn, BorderLayout.SOUTH);
-        btn.setAction(new AbstractAction("Load from CVS file") {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                new Thread(() -> {
-
-                    DefaultTableModel model = (DefaultTableModel) table.getModel();
-                    for (int i = model.getRowCount() - 1; i >= 0; i--) {
-                        model.removeRow(i);
-                    }
-
-                    fielding.forEach((K, V) -> ((DefaultTableModel) table.getModel()).addRow(V.toArray()));
-
-
-                }).start();
-
-            }
-        });
-
     }
 
     private JTable createBattingTable() {
@@ -74,23 +49,10 @@ public class SwingFielding extends JFrame {
 
 
         DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.addColumn("jerseyNumber");
-        model.addColumn("name");
-        model.addColumn("g");
-        model.addColumn("et");
-        model.addColumn("ef");
-        model.addColumn("err");
-        model.addColumn("po");
-        model.addColumn("a");
-        model.addColumn("sba");
-        model.addColumn("cs");
-        model.addColumn("dp");
-        model.addColumn("tp");
-        model.addColumn("pb");
-        model.addColumn("pkf");
-        model.addColumn("pk");
-        model.addColumn("fp");
-
+        for (String name : names) {
+            model.addColumn(name);
+        }
+        fielding.forEach((K, V) -> ((DefaultTableModel) table.getModel()).addRow(V.toArray()));
         int columnIndexToSort = 1;
         sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
 
